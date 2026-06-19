@@ -1,31 +1,47 @@
-import Die from "./components/Die";
+import { useState } from "react"
+import Die from "./components/Die"
+import { nanoid } from "nanoid"
 
 export default function App() {
+    const [dice, setDice] = useState(generateAllNewDice())
 
-  function generateNewDie() {
-    const newDice = [];
-    for (let i = 0; i < 10; i++) {
-      const rand = Math.floor(Math.random() * 6) + 1;
-      newDice.push(rand);
+    function generateAllNewDice() {
+        return new Array(10)
+            .fill(0)
+            .map(() => ({
+                value: Math.ceil(Math.random() * 6),
+                isHeld: false,
+                id: nanoid()
+            }))
     }
-    return newDice;
-  }
 
-  return (
+    function rollDice() {
+        setDice(generateAllNewDice())
+    }
+ 
+    function hold(id) {
+        setDice(oldDice => oldDice.map(die =>
+            die.id === id ?
+                { ...die, isHeld: !die.isHeld } :
+                die
+        ))
+    }
 
-    <main className="main">
-      <div className="dice-container">
-        <Die value={1} />
-        <Die value={2} />
-        <Die value={3} />
-        <Die value={4} />
-        <Die value={5} />
-        <Die value={6} />
-        <Die value={1} />
-        <Die value={2} />
-        <Die value={3} />
-        <Die value={4} />
-      </div>
-    </main>
-  );
+    const diceElements = dice.map(dieObj => (
+        <Die
+            key={dieObj.id}
+            value={dieObj.value}
+            isHeld={dieObj.isHeld}
+            hold={() => hold(dieObj.id)}
+        />
+    ))
+
+    return (
+        <main>
+            <div className="dice-container">
+                {diceElements}
+            </div>
+            <button className="roll-dice" onClick={rollDice}>Roll</button>
+        </main>
+    )
 }
