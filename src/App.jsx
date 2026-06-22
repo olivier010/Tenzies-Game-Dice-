@@ -147,7 +147,7 @@ export default function App() {
 
       {gameWon && (
         <div className="win-message">
-          🎉 You won in {rollCount} rolls and {seconds} seconds!
+          🎉 You won in {rollCount} rolls and {seconds} Seconds!
         </div>
       )}
 
